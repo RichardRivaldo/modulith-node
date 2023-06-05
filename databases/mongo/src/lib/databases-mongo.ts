@@ -9,6 +9,15 @@ export class MongoHelper {
             .catch((e: Error) =>
                 console.log(`Failed connecting to database, reason ${e}`)
             );
+        mongoose.set('toJSON', {
+            virtuals: true,
+            transform: (_: any, converted: any) => {
+                converted.id = converted._id;
+                delete converted._id;
+                delete converted.__v;
+                delete converted.password;
+            },
+        });
     }
 
     constructor() {
