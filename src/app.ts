@@ -2,6 +2,12 @@ import bodyParser from 'body-parser';
 import express, { Application, Router } from 'express';
 import cors from 'cors';
 import { MongoHelper } from '@modulith-node/databases/mongo';
+import {
+    AuthController,
+    UserController,
+    UserService,
+} from '@modulith-node/modules/user';
+import { auth } from '@modulith-node/middlewares/auth';
 
 class App {
     public app: Application;
@@ -22,11 +28,15 @@ class App {
 
     private setControllers() {
         const root = Router();
-        this.app.use('/api', root);
 
-        root.get('/', (req, res) => {
-            res.send({ message: 'Hello API' });
-        });
+        const authController = new AuthController(new UserService());
+        const userController = new UserController(new UserService());
+
+        this.app.use('/api', root);
+        root.use('/auth', authController.router);
+
+        root.use(auth);
+        root.use('/users', userController.router);
 
         this.app.all('*', (_, res) => {
             res.status(400).json({ data: null, message: 'Invalid endpoint!' });
