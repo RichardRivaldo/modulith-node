@@ -1,0 +1,41 @@
+{
+  "name": "databases-mongo",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "databases/mongo/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/databases/mongo",
+        "tsConfig": "databases/mongo/tsconfig.lib.json",
+        "packageJson": "databases/mongo/package.json",
+        "main": "databases/mongo/src/index.ts",
+        "assets": ["databases/mongo/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["databases/mongo/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "databases/mongo/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    }
+  },
+  "tags": []
+}

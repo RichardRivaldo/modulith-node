@@ -13,7 +13,13 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {},
+    "paths": {
+      "@modulith-node/databases/mongo": ["databases/mongo/src/index.ts"],
+      "@modulith-node/middlewares/auth": ["middlewares/auth/src/index.ts"],
+      "@modulith-node/modules/gofood": ["modules/gofood/src/index.ts"],
+      "@modulith-node/modules/restaurant": ["modules/restaurant/src/index.ts"],
+      "@modulith-node/modules/user": ["modules/user/src/index.ts"]
+    },
     "esModuleInterop": true
   },
   "files": [],
