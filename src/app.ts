@@ -13,6 +13,7 @@ import {
     RestaurantController,
     RestaurantService,
 } from '@modulith-node/modules/restaurant';
+import { GofoodController, GofoodService } from '@modulith-node/modules/gofood';
 
 class App {
     public app: Application;
@@ -34,12 +35,22 @@ class App {
     private setControllers() {
         const root = Router();
 
-        const authController = new AuthController(new UserService());
-        const userController = new UserController(new UserService());
-        const restaurantController = new RestaurantController(
-            new RestaurantService(),
-            new CuisineService()
+        const userService = new UserService();
+        const cuisineService = new CuisineService();
+        const restaurantService = new RestaurantService();
+        const gofoodService = new GofoodService(
+            userService,
+            cuisineService,
+            restaurantService
         );
+
+        const authController = new AuthController(userService);
+        const userController = new UserController(userService);
+        const restaurantController = new RestaurantController(
+            restaurantService,
+            cuisineService
+        );
+        const gofoodController = new GofoodController(gofoodService);
 
         this.app.use('/api', root);
         root.use('/auth', authController.router);
@@ -47,6 +58,7 @@ class App {
         root.use(auth);
         root.use('/users', userController.router);
         root.use('/restaurants', restaurantController.router);
+        root.use('/gofood', gofoodController.router);
 
         this.app.all('*', (_, res) => {
             res.status(400).json({ data: null, message: 'Invalid endpoint!' });
