@@ -9,6 +9,7 @@ const cuisineSchema: Schema = new Schema(
         restaurantID: {
             type: Schema.Types.ObjectId,
             required: true,
+            ref: 'restaurants',
         },
         name: {
             type: String,
