@@ -8,6 +8,11 @@ import {
     UserService,
 } from '@modulith-node/modules/user';
 import { auth } from '@modulith-node/middlewares/auth';
+import {
+    CuisineService,
+    RestaurantController,
+    RestaurantService,
+} from '@modulith-node/modules/restaurant';
 
 class App {
     public app: Application;
@@ -31,12 +36,17 @@ class App {
 
         const authController = new AuthController(new UserService());
         const userController = new UserController(new UserService());
+        const restaurantController = new RestaurantController(
+            new RestaurantService(),
+            new CuisineService()
+        );
 
         this.app.use('/api', root);
         root.use('/auth', authController.router);
 
         root.use(auth);
         root.use('/users', userController.router);
+        root.use('/restaurants', restaurantController.router);
 
         this.app.all('*', (_, res) => {
             res.status(400).json({ data: null, message: 'Invalid endpoint!' });
