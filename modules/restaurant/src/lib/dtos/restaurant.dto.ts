@@ -8,5 +8,5 @@ export interface ChangeRestaurantRequestDTO {
     name: string;
     address: string;
     phoneNumber: string;
-    isActive: string;
+    isActive: boolean;
 }

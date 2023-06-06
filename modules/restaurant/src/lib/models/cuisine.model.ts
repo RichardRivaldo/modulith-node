@@ -20,6 +20,7 @@ const cuisineSchema: Schema = new Schema(
         },
         totalBought: {
             type: Number,
+            default: 0,
             required: true,
         },
         isActive: {
