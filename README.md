@@ -28,7 +28,7 @@ In the Kejog application, there will be three services implemented. Aside from u
 
 In regards of the services, there will only be several entities defined, including user for user service, restaurant and cuisine service for restaurant service, and order for GoFood service. The definition and relationship of each entities can be seen in the depicted Entity Relationship Diagram shown below. Here is an example of how to interpret the notation I used in the ERD. The restaurant and cuisine is connected with the menu relationship. In this case, a restaurant can have many cuisines menu, but not the other way. Hence, the defined relationship is one-to-many, as represented with arrow and non-arrow end of the line. We also see that a restaurant may not have any menu at all (might be because the merchant hasn't registered any), but not the other way around. In this case, the defined relationship is a partial-to-complete participation, as defined with thick and double lines for each relationship. Note that for simplicity sake, the entities defined are not really detailed.
 
-![ERD for Kejog Entities](docs/img/ERD_kejog.png 'ERD for Kejog Entities')
+![ERD for Kejog Entities](docs/img/ERD_Kejog.png 'ERD for Kejog Entities')
 
 # Setting Up
 
