@@ -1,4 +1,4 @@
-import { FilterQuery } from 'mongoose';
+import { BooleanExpressionOperator, FilterQuery } from 'mongoose';
 import { ICuisine } from '../interfaces/cuisine.interface';
 import { Cuisine } from '../models/cuisine.model';
 import {
@@ -16,6 +16,25 @@ export class CuisineService {
 
     private getRestaurantManagerID = async (id: string): Promise<string> => {
         return (await Restaurant.findById(id)).userID.toString();
+    };
+
+    private getCuisines = async (cuisinesID: string[]): Promise<ICuisine[]> => {
+        return await Cuisine.find({
+            _id: { $in: cuisinesID },
+        });
+    };
+
+    private validateCuisine = async (
+        cuisines: ICuisine[]
+    ): Promise<boolean> => {
+        const cuisineStatus = cuisines.map((cuisine) => cuisine.isActive);
+        return cuisineStatus.every(Boolean);
+    };
+
+    private calculateTotalPrice = async (
+        cuisines: ICuisine[]
+    ): Promise<number> => {
+        return cuisines.reduce((sum, current) => sum + current.price, 0);
     };
 
     public addCuisine = async (
@@ -91,5 +110,23 @@ export class CuisineService {
         }
 
         return await cuisine.deleteOne({ new: true });
+    };
+
+    public validateAndCalculate = async (cuisinesID: string[]) => {
+        const cuisines = await this.getCuisines(cuisinesID);
+        if (this.validateCuisine(cuisines)) {
+            return this.calculateTotalPrice(cuisines);
+        }
+        return -1;
+    };
+
+    public applyOrder = async (cuisinesID: string[]): Promise<boolean> => {
+        const cuisines = await this.getCuisines(cuisinesID);
+        cuisines.forEach(async (cuisine) => {
+            cuisine.totalBought += 1;
+            await cuisine.save();
+        });
+
+        return true;
     };
 }
