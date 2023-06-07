@@ -119,4 +119,33 @@ export class GofoodService {
         const finalStatus = this.mapActionToStatus(action);
         return await this.changeOrderStatus(order, finalStatus);
     };
+
+    public getOrderDetails = async (
+        orderID: string,
+        userID: string
+    ): Promise<IGofood> => {
+        const order = await this.getOrder(orderID);
+        if (!order) {
+            throw new Error("Order with this ID doesn't exist!");
+        }
+
+        const user = await this.userService.getOne(userID);
+        if (!user) {
+            throw new Error("User with this ID doesn't exist!");
+        }
+
+        const restaurant = await this.restaurantService.getRestaurantDetails(
+            order.restaurantID.toString()
+        );
+
+        const validUser = [
+            order.userID.toString(),
+            restaurant.userID.toString(),
+        ];
+        if (!validUser.includes(userID)) {
+            throw new Error('Unauthorized action!');
+        }
+
+        return order;
+    };
 }

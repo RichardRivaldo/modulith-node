@@ -17,6 +17,7 @@ export class GofoodController {
         this.router.post('/', this.order);
         this.router.post('/:id/finish', this.finishOrder);
         this.router.post('/:id/cancel', this.cancelOrder);
+        this.router.get('/:id', this.getOrderDetails);
     }
 
     private order = async (req: AuthRequest, res: Response) => {
@@ -104,6 +105,38 @@ export class GofoodController {
             return res.status(500).send({
                 status: 500,
                 message: `Failed cancelling the order! Reason: ${err.message}`,
+                data: null,
+            });
+        }
+    };
+
+    private getOrderDetails = async (req: AuthRequest, res: Response) => {
+        try {
+            const userRole = req.creds['role'];
+            if (
+                req.creds['id'] &&
+                (userRole === Role.Merchant || userRole === Role.User)
+            ) {
+                const result = await this.gofoodService.getOrderDetails(
+                    req.params.id,
+                    req.creds['id']
+                );
+                return res.status(200).send({
+                    status: 200,
+                    message: 'Successfully get order details!',
+                    data: result,
+                });
+            } else {
+                return res.status(401).send({
+                    status: 401,
+                    message: 'Unauthorized action!',
+                    data: null,
+                });
+            }
+        } catch (err) {
+            return res.status(500).send({
+                status: 500,
+                message: `Failed getting order details! Reason: ${err.message}`,
                 data: null,
             });
         }
