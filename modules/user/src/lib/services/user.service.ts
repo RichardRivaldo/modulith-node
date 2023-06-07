@@ -81,7 +81,7 @@ export class UserService {
             }
         }
 
-        if (!this.checkPassword(data.currentPassword, user.password)) {
+        if (!(await this.checkPassword(data.currentPassword, user.password))) {
             throw new Error('Invalid password!');
         }
 
